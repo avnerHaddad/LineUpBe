@@ -2,10 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const shiftBoard_1 = require("./shiftBoard");
 class shiftMaster {
-    constructor(users, constraints) {
+    constructor(users) {
         this.nextShiftBoard = new shiftBoard_1.shiftBoard();
         this.usersToShift = users;
-        this.constraints = constraints;
         this.prefs = [];
     }
     //init user function: get users from db, convert them into "solve_logic" user objects and add them to the user list

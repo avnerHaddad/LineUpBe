@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { FetchUser } from "../dal/readerFunctions";
 
 export const Login = async (req: Request, res: Response): Promise<Response> => {
   const { username, password } = req.body;
@@ -9,9 +10,11 @@ export const Login = async (req: Request, res: Response): Promise<Response> => {
   }
 
   const token = generateToken(username, password);
-  res.cookie("token", token, { httpOnly: true }); // You may also want to consider other options such as 'secure: true' for HTTPS
-
-  return res.json({ message: "Login successful", token });
+  res.cookie("token", token, { httpOnly: false,secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+  sameSite: 'strict'});
+   // Adjust according to your needs ('strict', 'lax', or 'none') }); // You may also want to consider other options such as 'secure: true' for HTTPS
+   console.log({ message: "Login successful", token, user: await FetchUser(username) });
+  return res.json({ message: "Login successful", token, user: await FetchUser(username) });
 };
 
 function authenticateUser(username: string, password: string) {

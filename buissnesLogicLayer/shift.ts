@@ -9,6 +9,7 @@ export class shift {
   job: jobEnum;
   shiftId: number;
   avgScore: number;
+  availableUsers: user[];
 
   constructor(
     is_filled: boolean,
@@ -21,5 +22,6 @@ export class shift {
     this.job = job;
     this.shiftId = shiftId;
     this.avgScore = 0;
+    this.availableUsers = [];
   }
 }

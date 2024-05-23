@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserJobs = exports.GetShiftsByDateAndJob = exports.getReacuringShiftsByJobs = exports.getReacuringShiftsByJob = void 0;
+exports.getUserInfo = exports.getUserJobs = exports.GetShiftsByDateAndJob = exports.getReacuringShiftsByJobs = exports.getReacuringShiftsByJob = void 0;
 //gets all of the current reacuring shifts for a specific job, used for pref menu
 exports.getReacuringShiftsByJob = `
-        SELECT s.id, s.shiftDay, s.shiftJobType, s.shiftStartHour, s.shiftEndHour
+        SELECT s.id, s.shiftDay, j.jobtype, to_char(s.shiftStartHour, 'HH24:MI') AS shiftStartHour,
+        to_char(s.shiftEndHour, 'HH24:MI') AS shiftEndHour 
         FROM CurrentRecurringShifts s
-        INNER JOIN "jobs" j ON j.JobType = s.shiftJobType
-        WHERE j.jobType = ANY($1)
+        INNER JOIN "jobs" j ON j.id = s.shiftjobid
+        WHERE j.jobType = $1
         `;
 //gets all of the current reacuring shifts for a specific job, used for pref menu
 exports.getReacuringShiftsByJobs = `
@@ -28,9 +29,9 @@ exports.GetShiftsByDateAndJob = `
         FROM
           Shifts
         JOIN
-          Jobs ON Shifts.jobid = Jobs.id
+          Jobs ON Shifts.job_id = Jobs.id
         JOIN
-          Users ON Jobs.user_id = Users.id
+          Users ON Shifts.user_id = Users.id
         WHERE
           Shifts.shiftStartTime >= $1 AND Shifts.shiftEndTime <= $2 AND Jobs.jobType = $3
         `;
@@ -41,3 +42,8 @@ exports.getUserJobs = `
         INNER JOIN Users u ON j.user_id = u.id
         WHERE u.username = $1
     `;
+exports.getUserInfo = `
+SELECT id, username, created_at, is_admin
+FROM users
+WHERE username = $1;
+`;

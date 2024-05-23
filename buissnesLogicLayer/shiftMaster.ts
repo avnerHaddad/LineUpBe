@@ -1,19 +1,17 @@
-import { constraint } from "./constraint";
 import { shiftBoard } from "./shiftBoard";
 import { user } from "./user";
 import { shift } from "./shift";
 import { Preferance } from "./Preference";
+import { getAllConfirmedConstraints, getAllUsers } from "../dal/readerFunctions";
 
 class shiftMaster {
   usersToShift: user[];
   nextShiftBoard: shiftBoard;
-  constraints: constraint[];
   prefs: Preferance[];
 
-  constructor(users: user[], constraints: constraint[]) {
+  constructor(users: user[]) {
     this.nextShiftBoard = new shiftBoard();
     this.usersToShift = users;
-    this.constraints = constraints;
     this.prefs = [];
   }
 
@@ -91,5 +89,15 @@ class shiftMaster {
 
   calculateNextJustice(user: user, shift: shift) {
     return user.justicePoints + this.getShiftPref(user, shift);
+  }
+
+  async initialiseUsers(){
+    this.usersToShift = await getAllUsers();
+  }
+
+  initialiseShifts(startDate: Date, endDate: Date){
+    //get constraints
+    var constraints = async ()=> await getAllConfirmedConstraints(startDate, endDate)
+
   }
 }

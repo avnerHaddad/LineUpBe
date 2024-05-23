@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Login = void 0;
+const readerFunctions_1 = require("../dal/readerFunctions");
 const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
     var userAuthenticated = authenticateUser(username, password);
@@ -17,8 +18,11 @@ const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(401).json({ message: "Invalid username or password" });
     }
     const token = generateToken(username, password);
-    res.cookie("token", token, { httpOnly: true }); // You may also want to consider other options such as 'secure: true' for HTTPS
-    return res.json({ message: "Login successful", token });
+    res.cookie("token", token, { httpOnly: false, secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        sameSite: 'strict' });
+    // Adjust according to your needs ('strict', 'lax', or 'none') }); // You may also want to consider other options such as 'secure: true' for HTTPS
+    console.log({ message: "Login successful", token, user: yield (0, readerFunctions_1.FetchUser)(username) });
+    return res.json({ message: "Login successful", token, user: yield (0, readerFunctions_1.FetchUser)(username) });
 });
 exports.Login = Login;
 function authenticateUser(username, password) {

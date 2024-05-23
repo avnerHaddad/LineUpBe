@@ -8,6 +8,7 @@ class shift {
         this.job = job;
         this.shiftId = shiftId;
         this.avgScore = 0;
+        this.cantTake = [];
     }
 }
 exports.shift = shift;
