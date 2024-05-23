@@ -1,21 +1,15 @@
 import internal from "stream";
-import { job, jobEnum } from "./job";
+import { job, jobEnum } from './job';
+import {User} from "../dal/models";
 export class user {
   username: string;
   justicePoints: number;
-  minShifts: number;
   jobs: jobEnum;
   scoreWithShift: { [key: number]: number } = {};
 
-  constructor(
-    username: string,
-    justicePoints: number,
-    minShifts: number,
-    jobs: jobEnum,
-  ) {
-    this.username = username;
-    this.justicePoints = justicePoints;
-    this.minShifts = minShifts;
-    this.jobs = jobs;
+  constructor(user:User) {
+    this.username = user.username;
+    this.justicePoints = 0;
+    this.jobs = jobEnum.Tech;
   }
 }

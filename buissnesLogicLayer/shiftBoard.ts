@@ -1,3 +1,4 @@
+import { Constraint, ReacuringShift, Preference } from '../dal/models';
 import { day } from "./day";
 import { shift } from "./shift";
 import { user } from "./user";
@@ -11,7 +12,7 @@ export class shiftBoard {
   friday: day;
   saturday: day;
 
-  constructor() {
+  constructor(ReacuringShifts : Promise<ReacuringShift[]>, usersToShift: user[], constraints: Promise<Constraint[]>, Preferences: Promise<Preference[]>) {
     this.sunday = new day(1);
     this.monday = new day(2);
     this.tuesday = new day(3);

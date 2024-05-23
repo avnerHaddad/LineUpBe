@@ -15,6 +15,11 @@ export interface Shift {
   shiftStartHour: string;
   shiftEndHour: string;
 }
+export interface Preference {
+  user_id: number;
+  shift_id: number;
+  preference: number;
+}
 export interface Job {
   id: number;
   jobtype: string;
@@ -27,7 +32,6 @@ export interface Job {
 export interface User {
   id: number;
   username: string;
-  currentPoints: number;
   //maybe shifts that user takes/took
   //maybe all of his preferences
   //link to his picture

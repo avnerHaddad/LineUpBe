@@ -3,7 +3,7 @@
 //get all constraints function
 
 import { Pool, QueryResult } from "pg";
-import { ReacuringShift, Shift, Job, User, Constraint } from "./models";
+import { ReacuringShift, Shift, Job, User, Constraint, Preference } from "./models";
 import {
   getReacuringShiftsByJob,
   getReacuringShiftsByJobs,
@@ -152,18 +152,20 @@ export async function getUserUsedPoints(username: string): Promise<number> {
   }
 }
 
-export async function getAllConfirmedConstraints(startDate: Date, EndDate: Date){
+export async function getAllConfirmedConstraints(startDate: Date, endDate: Date) {
   const client = await pool.connect();
   try {
     const query = `
       SELECT * FROM Constraints
-      Where //where in between date and isconfiremd true
+      WHERE isConfirmed = true
+      AND startAt >= $1
+      AND endAt <= $2;
     `;
-    const { rows }: QueryResult<Constraint> = await client.query(query, [startDate, EndDate]);
-    return rows
+    const { rows }: QueryResult<Constraint> = await client.query(query, [startDate, endDate]);
+    return rows;
   } catch (err) {
-    console.error('Error fetching user used points:', err);
-    return 0;
+    console.error('Error fetching confirmed constraints:', err);
+    return [];
   } finally {
     await client.release();
   }
@@ -179,6 +181,38 @@ export async function getAllUsers(){
   } catch (err) {
     console.error('Error fetching users:', err);
     return 0;
+  } finally {
+    await client.release();
+  }
+}
+
+export async function getAllPreferences() {
+  const client = await pool.connect();
+  try {
+    const query = `
+      SELECT * FROM Preferences;
+    `;
+    const { rows }: QueryResult<Preference> = await client.query(query);
+    return rows;
+  } catch (err) {
+    console.error('Error fetching preferences:', err);
+    return [];
+  } finally {
+    await client.release();
+  }
+}
+
+export async function getAllRecurringShifts() {
+  const client = await pool.connect();
+  try {
+    const query = `
+      SELECT * FROM CurrentRecurringShifts;
+    `;
+    const { rows }: QueryResult<ReacuringShift> = await client.query(query);
+    return rows;
+  } catch (err) {
+    console.error('Error fetching recurring shifts:', err);
+    return [];
   } finally {
     await client.release();
   }

@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 # Database connection parameters
 DB_NAME = "LineUp"
 DB_USER = "postgres"
-DB_PASSWORD = "admin"
+DB_PASSWORD = "postgres"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 

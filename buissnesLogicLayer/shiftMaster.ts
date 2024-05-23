@@ -2,15 +2,17 @@ import { shiftBoard } from "./shiftBoard";
 import { user } from "./user";
 import { shift } from "./shift";
 import { Preferance } from "./Preference";
-import { getAllConfirmedConstraints, getAllUsers } from "../dal/readerFunctions";
+import { getAllConfirmedConstraints, getAllPreferences, getAllUsers, getAllRecurringShifts } from "../dal/readerFunctions";
+import { Constraint, ReacuringShift } from '../dal/models';
+import { getReacuringShiftsByJob } from "../dal/querries";
+import { error } from "console";
 
 class shiftMaster {
   usersToShift: user[];
-  nextShiftBoard: shiftBoard;
+  nextShiftBoard!: shiftBoard;
   prefs: Preferance[];
 
   constructor(users: user[]) {
-    this.nextShiftBoard = new shiftBoard();
     this.usersToShift = users;
     this.prefs = [];
   }
@@ -91,13 +93,25 @@ class shiftMaster {
     return user.justicePoints + this.getShiftPref(user, shift);
   }
 
-  async initialiseUsers(){
-    this.usersToShift = await getAllUsers();
+  async initialiseUsers(startDate: Date, endDate: Date){
+    var users = await getAllUsers();
+    if (Array.isArray(users)) {
+      for(var raw_user of users){
+        this.usersToShift.push(new user(raw_user));
+      }
+    } else {
+      throw error;
+    }
   }
+
 
   initialiseShifts(startDate: Date, endDate: Date){
     //get constraints
-    var constraints = async ()=> await getAllConfirmedConstraints(startDate, endDate)
+    var constraints = async ()=> await getAllConfirmedConstraints(startDate, endDate);
+    var ReacuringShi= async ()=> await getAllRecurringShifts();
+    var prefs = async ()=> await getAllPreferences();
+    this.nextShiftBoard = new shiftBoard(ReacuringShi(), this.usersToShift, constraints(), prefs());
+ 
+}
 
-  }
 }
