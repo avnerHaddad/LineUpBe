@@ -1,0 +1,9 @@
+then run this command 
+-- Step 1: Alter the column types
+ALTER TABLE CurrentRecurringShifts
+ALTER COLUMN shiftStartHour TYPE time without time zone
+USING shiftStartHour::time;
+
+ALTER TABLE CurrentRecurringShifts
+ALTER COLUMN shiftEndHour TYPE time without time zone
+USING shiftEndHour::time;
