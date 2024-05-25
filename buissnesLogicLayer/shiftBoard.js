@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.shiftBoard = void 0;
 const day_1 = require("./day");
 class shiftBoard {
-    constructor() {
+    constructor(ReacuringShifts, usersToShift, constraints, Preferences) {
         this.sunday = new day_1.day(1);
         this.monday = new day_1.day(2);
         this.tuesday = new day_1.day(3);

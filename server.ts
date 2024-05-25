@@ -24,14 +24,7 @@ app.get("/api/current_shifts", (req: Request, res: Response) => {
   res.json({ message: "Hello from the backend!" });
 });
 
-app.get("/api/userinfo", (req: Request, res: Response) => {
-  let avner = new user("avner", 5, 5, jobEnum.Matzat);
-  const response = {
-    message: "User data retrieved successfully",
-    data: JSON.stringify(avner),
-  };
-  res.json(response);
-});
+
 
 // Start the server
 const PORT: number = parseInt(process.env.PORT!) || 3001;

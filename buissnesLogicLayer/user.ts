@@ -5,9 +5,11 @@ export class user {
   username: string;
   justicePoints: number;
   jobs: jobEnum;
+  id: number
   scoreWithShift: { [key: number]: number } = {};
 
   constructor(user:User) {
+    this.id = user.id;
     this.username = user.username;
     this.justicePoints = 0;
     this.jobs = jobEnum.Tech;

@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserUsedPoints = exports.getUserShiftCount = exports.FetchUser = exports.FetchShiftsByDate = exports.getCurrentRecurringShiftsByJobTypes = exports.getJobsByUser = exports.getRecurringShiftsByJobType = void 0;
+exports.getAllRecurringShifts = exports.getAllPreferences = exports.getAllUsers = exports.getAllConfirmedConstraints = exports.getUserUsedPoints = exports.getUserShiftCount = exports.FetchUser = exports.FetchShiftsByDate = exports.getCurrentRecurringShiftsByJobTypes = exports.getJobsByUser = exports.getRecurringShiftsByJobType = void 0;
 const querries_1 = require("./querries");
 const db_1 = require("./db");
 function getRecurringShiftsByJobType(jobType) {
@@ -157,3 +157,86 @@ function getUserUsedPoints(username) {
     });
 }
 exports.getUserUsedPoints = getUserUsedPoints;
+function getAllConfirmedConstraints(startDate, endDate) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = yield db_1.pool.connect();
+        try {
+            const query = `
+      SELECT * FROM Constraints
+      WHERE isConfirmed = true
+      AND startAt >= $1
+      AND endAt <= $2;
+    `;
+            const { rows } = yield client.query(query, [startDate, endDate]);
+            return rows;
+        }
+        catch (err) {
+            console.error('Error fetching confirmed constraints:', err);
+            return [];
+        }
+        finally {
+            yield client.release();
+        }
+    });
+}
+exports.getAllConfirmedConstraints = getAllConfirmedConstraints;
+function getAllUsers() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = yield db_1.pool.connect();
+        try {
+            const query = `
+      SELECT * FROM Users
+    `;
+            const { rows } = yield client.query(query);
+            return rows;
+        }
+        catch (err) {
+            console.error('Error fetching users:', err);
+            return 0;
+        }
+        finally {
+            yield client.release();
+        }
+    });
+}
+exports.getAllUsers = getAllUsers;
+function getAllPreferences() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = yield db_1.pool.connect();
+        try {
+            const query = `
+      SELECT * FROM Preferences;
+    `;
+            const { rows } = yield client.query(query);
+            return rows;
+        }
+        catch (err) {
+            console.error('Error fetching preferences:', err);
+            return [];
+        }
+        finally {
+            yield client.release();
+        }
+    });
+}
+exports.getAllPreferences = getAllPreferences;
+function getAllRecurringShifts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = yield db_1.pool.connect();
+        try {
+            const query = `
+      SELECT * FROM CurrentRecurringShifts;
+    `;
+            const { rows } = yield client.query(query);
+            return rows;
+        }
+        catch (err) {
+            console.error('Error fetching recurring shifts:', err);
+            return [];
+        }
+        finally {
+            yield client.release();
+        }
+    });
+}
+exports.getAllRecurringShifts = getAllRecurringShifts;

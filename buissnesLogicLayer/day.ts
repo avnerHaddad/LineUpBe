@@ -1,10 +1,10 @@
 import { shift } from "./shift";
 export class day {
   shifts: shift[];
-  day: number;
+  date: Date;
 
-  constructor(day: number) {
-    this.day = day;
+  constructor(date: Date) {
+    this.date = date;
     this.shifts = [];
   }
 
