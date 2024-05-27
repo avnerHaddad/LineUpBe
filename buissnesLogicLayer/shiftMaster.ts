@@ -10,11 +10,9 @@ import { error } from "console";
 class shiftMaster {
   usersToShift: user[];
   nextShiftBoard!: shiftBoard;
-  prefs: Preferance[];
 
   constructor(users: user[]) {
     this.usersToShift = users;
-    this.prefs = [];
   }
 
   //init user function: get users from db, convert them into "solve_logic" user objects and add them to the user list
@@ -40,7 +38,6 @@ class shiftMaster {
   }
 
   solve() {
-    this.updateAvgScore();
     this.sortShiftsByAvgScore();
     //start with the worst shift and inset the person that has the least total injustice after getting it
     for (var shift of this.nextShiftBoard.getAllShifts()) {
@@ -60,18 +57,6 @@ class shiftMaster {
     }
   }
 
-  updateAvgScore() {
-    for (var shift of this.nextShiftBoard.getAllShifts()) {
-      for (var Preferance of this.prefs) {
-        var count: number = 0;
-        if (Preferance.shiftId == shift.shiftId) {
-          shift.avgScore += Preferance.points;
-          count++;
-        }
-        shift.avgScore = shift.avgScore / count;
-      }
-    }
-  }
 
   sortShiftsByAvgScore() {
     for (var shift of this.nextShiftBoard.getAllShifts()) {
@@ -81,16 +66,10 @@ class shiftMaster {
     }
   }
 
-  getShiftPref(user: user, shift: shift) {
-    const points_allocated = this.prefs.find(
-      (preferance: Preferance) =>
-        preferance.shiftId == shift.shiftId && preferance.user == user,
-    )?.points;
-    return points_allocated ? points_allocated : 0;
-  }
+
 
   calculateNextJustice(user: user, shift: shift) {
-    return user.justicePoints + this.getShiftPref(user, shift);
+    return user.justicePoints + shift.userPreferences.get(user.id)!;
   }
 
   async initialiseUsers(startDate: Date, endDate: Date){

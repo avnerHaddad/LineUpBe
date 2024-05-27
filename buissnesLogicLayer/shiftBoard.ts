@@ -36,20 +36,25 @@ export class shiftBoard {
         }
       }
     }
+    //go over all preferences and for each shift with the id of the preference shiftid call the add preference function
+    for (let preference of prefs) {
+      for (let shift of this.shifts) {
+        if (preference.shift_id === shift.shiftId) {
+          shift.addPreference(preference.user_id, preference.preference);
+        }
+      }
+    }
 
     
+  }
+
+  getAllShifts() {
+    return this.shifts;
   }
 
    isDateInRange(date: Date, startDate: Date, endDate: Date): boolean {
     return date >= startDate && date <= endDate;
 }
-  getAllShifts() {
 
-    let allShifts: shift[] = [];
 
-    for (let day of this.days) {
-      allShifts = allShifts.concat(day.getShifts());
-    }
-    return allShifts;
-  }
 }
