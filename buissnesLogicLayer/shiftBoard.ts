@@ -7,7 +7,7 @@ export class shiftBoard {
   //days: day[]
   shifts: shift[]
 
-  constructor(ReacuringShifts : Promise<ReacuringShift[]>, usersToShift: user[], constraints: Promise<Constraint[]>, Preferences: Promise<Preference[]>, startDate: Date, endDate: Date) {
+  constructor(ReacuringShifts : ReacuringShift[], usersToShift: user[], constraints: Constraint[], Preferences: Preference[], startDate: Date, endDate: Date) {
     this.shifts = [];
     /*use an array of days, the length should be the endDate - startDate + 1, each day contains an array of shifts
     const daysCount = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)) + 1;
@@ -22,7 +22,7 @@ export class shiftBoard {
   */
  }
 
-  async initilasliseShifts(ReacuringShifts : Promise<ReacuringShift[]>, usersToShift: user[], constraints: Promise<Constraint[]>, Preferences: Promise<Preference[]>) {
+  async initilasliseShifts(ReacuringShifts : ReacuringShift[], usersToShift: user[], constraints: Promise<Constraint[]>, Preferences: Promise<Preference[]>) {
     const [Reshifts, cons, prefs] = await Promise.all([ReacuringShifts, constraints, Preferences]);
 
     for (let Reshift of Reshifts) {
@@ -44,9 +44,10 @@ export class shiftBoard {
         }
       }
     }
-
-    
+    for(let shift of this.shifts) {
+      shift.sortUsers();
   }
+}
 
   getAllShifts() {
     return this.shifts;

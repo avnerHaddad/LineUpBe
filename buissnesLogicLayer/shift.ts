@@ -6,7 +6,7 @@ import { Preferance } from "./Preference";
 
 export class shift {
   is_filled: boolean;
-  user_taken!: user;
+  user_taken!: user | null;
   //a way to connect it with the user score he gave it
   job: string; // make enum later
   shiftId: number;
@@ -75,4 +75,31 @@ export class shift {
     const totalScore = Array.from(this.userPreferences.values()).reduce((acc, score) => acc + score, 0);
     this.avgScore = totalScore / this.userPreferences.size;
   }
+
+  sortUsers(): void {
+    for(let user of this.availableUsers) {
+      // Sort the availableUsers list based on the value of the users' ID preference in the userPreferences map
+      this.availableUsers.sort((user_a, user_b) => {
+        const userA_preference = this.userPreferences.get(user_a.id);
+        const userB_preference = this.userPreferences.get(user_b.id);
+  
+        if (userA_preference === undefined && userB_preference === undefined) {
+          return 0; // Both users have no preference, so they are equal
+        } else if (userA_preference === undefined) {
+          return 1; // User A has no preference, so User B comes first
+        } else if (userB_preference === undefined) {
+          return -1; // User B has no preference, so User A comes first
+        } else {
+          return userA_preference - userB_preference;
+        }
+      });
+    }
+  }
+
+  shiftUser(user: user): void {
+    this.is_filled = true;
+    this.user_taken = user;
+    this.availableUsers = this.availableUsers.filter(u => u.id!== user.id);
+  }
+  
 }
