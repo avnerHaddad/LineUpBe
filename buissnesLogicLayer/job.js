@@ -7,3 +7,4 @@ var jobEnum;
     jobEnum[jobEnum["Tech"] = 1] = "Tech";
     jobEnum[jobEnum["Mamash"] = 2] = "Mamash";
 })(jobEnum || (exports.jobEnum = jobEnum = {}));
+//# sourceMappingURL=job.js.map

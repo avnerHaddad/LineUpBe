@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { FetchUser } from "../dal/readerFunctions";
+import { FetchUser, getAllUsers } from "../dal/User/userFunctions";
 
 export const Login = async (req: Request, res: Response): Promise<Response> => {
   const { username, password } = req.body;
@@ -18,6 +18,8 @@ export const Login = async (req: Request, res: Response): Promise<Response> => {
 };
 
 function authenticateUser(username: string, password: string) {
+  let users = getAllUsers();
+  console.log(users);
   if (username == "avner" && password == "123") {
     return true;
   } else {

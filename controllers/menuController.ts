@@ -1,7 +1,7 @@
 import {
-  FetchShiftsByDate,
-  getRecurringShiftsByJobType,
-} from "../dal/readerFunctions";
+  FetchShiftsByDate, fetchShiftsByDateOnly
+} from "../dal/Shifts/ShiftFunctions";
+import { getRecurringShiftsByJobType } from "../dal/ReacuringShifts/ReacuringShiftsFunctions";
 import express, { Request, Response } from "express";
 import moment from "moment";
 import { daysOfWeek } from "../config/config";
@@ -11,8 +11,12 @@ export const getShifts = async (req: Request, res: Response) => {
   try {
     const option = req.query.option as string | undefined;
 
-    if (option === undefined) {
-      throw new Error("Option parameter is missing");
+    if (option === 'none') {
+      console.log("Option is none");
+    }
+    if (!option) {
+        res.status(400).json({ error: "Option parameter is missing" });
+        return;
     }
 
     try {
@@ -35,13 +39,21 @@ export const getShiftsByDate = async (req: Request, res: Response) => {
     if (!option) {
       throw new Error("Option parameter is missing");
     }
+
+
     if (!startDate || !endDate) {
       res.status(400).json({ error: "Start date and end date are required" });
       return;
     }
-    const shifts = await FetchShiftsByDate(startDate, endDate, option);
-    const formattedShifts = shifts.map(formatShift);
-    res.json(formattedShifts);
+    if(option === 'none') {
+      const shifts = await fetchShiftsByDateOnly(startDate, endDate);
+      const formattedShifts = shifts.map(formatShift);
+      res.json(formattedShifts);
+    }else{
+      const shifts = await FetchShiftsByDate(startDate, endDate, option);
+      const formattedShifts = shifts.map(formatShift);
+      res.json(formattedShifts);
+    }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

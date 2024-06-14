@@ -26,6 +26,8 @@ const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.Login = Login;
 function authenticateUser(username, password) {
+    let users = (0, readerFunctions_1.getAllUsers)();
+    console.log(users);
     if (username == "avner" && password == "123") {
         return true;
     }
@@ -36,3 +38,4 @@ function authenticateUser(username, password) {
 function generateToken(username, password) {
     return "123";
 }
+//# sourceMappingURL=authenticationController.js.map

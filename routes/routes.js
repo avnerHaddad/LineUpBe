@@ -19,3 +19,4 @@ router.get("/points", userController_1.calculateFreePoints);
 router.post("/resetprefs", userController_1.resetPrefs);
 router.post("/setconstraint", userController_1.setConstraint);
 exports.default = router;
+//# sourceMappingURL=routes.js.map

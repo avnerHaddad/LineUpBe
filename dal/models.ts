@@ -1,9 +1,9 @@
 export interface ReacuringShift {
   id: number;
-  shiftDay: string;
+  shiftday: string;
   shiftJobType: string;
-  shiftStartHour: Date;
-  shiftEndHour: Date;
+  shiftstarthour: string;
+  shiftendhour: string;
 }
 export interface Shift {
   id: number;

@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.day = void 0;
 class day {
-    constructor(day) {
-        this.day = day;
+    constructor(date) {
+        this.date = date;
         this.shifts = [];
     }
     getShifts() {
@@ -11,3 +11,4 @@ class day {
     }
 }
 exports.day = day;
+//# sourceMappingURL=day.js.map

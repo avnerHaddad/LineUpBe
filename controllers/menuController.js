@@ -60,3 +60,4 @@ function formatShift(shift) {
     const shiftDay = shift.shift_day ? config_1.daysOfWeek[parseInt(shift.shift_day)] : "";
     return Object.assign(Object.assign({}, shift), { shift_day: shiftDay });
 }
+//# sourceMappingURL=menuController.js.map

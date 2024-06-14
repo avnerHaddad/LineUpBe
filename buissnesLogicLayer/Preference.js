@@ -9,3 +9,4 @@ class Preferance {
     }
 }
 exports.Preferance = Preferance;
+//# sourceMappingURL=Preference.js.map

@@ -10,3 +10,4 @@ exports.daysOfWeek = [
     "Friday",
     "Saturday",
 ];
+//# sourceMappingURL=config.js.map

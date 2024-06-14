@@ -9,78 +9,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.shiftMaster = void 0;
 const shiftBoard_1 = require("./shiftBoard");
 const user_1 = require("./user");
 const readerFunctions_1 = require("../dal/readerFunctions");
 const console_1 = require("console");
 class shiftMaster {
-    constructor(users) {
-        this.usersToShift = users;
-        this.prefs = [];
-    }
-    //init user function: get users from db, convert them into "solve_logic" user objects and add them to the user list
-    //dilema: should have can_person_take_shift function or just have a list of available shifts for a person?
-    //dilema:
-    //init constraitnts function, get constraints from db and convert them into "solve_logic" constraints
-    //solve function -> function that uses all of the data after it is eneterd and return a new board, calls save_to_db
-    //save_to_db -> calls converter functions, saces to the db all of the new updates
-    //can_person_take_shift checks if a user in this shift is valid
-    filter_users(users, shift) {
-        return users;
-    }
-    find_optimal_user(shift, available_users) {
-        var selected_user = available_users.reduce((prev, curr) => {
-            return prev.scoreWithShift[shift.shiftId] <
-                curr.scoreWithShift[shift.shiftId]
-                ? prev
-                : curr;
-        });
-        return selected_user;
-    }
     solve() {
-        this.updateAvgScore();
-        this.sortShiftsByAvgScore();
-        //start with the worst shift and inset the person that has the least total injustice after getting it
-        for (var shift of this.nextShiftBoard.getAllShifts()) {
-            var available_users = this.filter_users(this.usersToShift, shift);
-            for (var user of available_users) {
-                user.scoreWithShift[shift.shiftId] = this.calculateNextJustice(user, shift);
+        return __awaiter(this, void 0, void 0, function* () {
+            this.sortShiftsByAvgScore();
+            if (yield this.backtrack(0)) {
+                console.log("All shifts have been successfully assigned.");
+                console.log(this.nextShiftBoard.shifts);
             }
-            var user_to_shift = this.find_optimal_user(shift, available_users);
-            user_to_shift.justicePoints = this.calculateNextJustice(user_to_shift, shift);
-            shift.user_taken = user_to_shift;
-        }
+            else {
+                console.log("No valid assignment found for all shifts.");
+            }
+        });
     }
-    updateAvgScore() {
-        for (var shift of this.nextShiftBoard.getAllShifts()) {
-            for (var Preferance of this.prefs) {
-                var count = 0;
-                if (Preferance.shiftId == shift.shiftId) {
-                    shift.avgScore += Preferance.points;
-                    count++;
-                }
-                shift.avgScore = shift.avgScore / count;
+    backtrack(index) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (index >= this.nextShiftBoard.shifts.length) {
+                // Base case: all shifts have been assigned
+                return true;
             }
-        }
+            const currentShift = this.nextShiftBoard.shifts[index];
+            const available_users = currentShift.availableUsers;
+            for (const user of available_users) {
+                user.scoreWithShift[currentShift.shiftId] = this.calculateNextJustice(user, currentShift);
+                currentShift.user_taken = user;
+                if (yield this.backtrack(index + 1)) {
+                    // If assigning this user to the current shift leads to a valid assignment, return true
+                    user.justicePoints = this.calculateNextJustice(user, currentShift);
+                    return true;
+                }
+                // Backtrack: remove the user from the current shift
+                currentShift.user_taken = null;
+            }
+            // No valid assignment found for this shift
+            return false;
+        });
     }
     sortShiftsByAvgScore() {
-        for (var shift of this.nextShiftBoard.getAllShifts()) {
+        for (var shift of this.nextShiftBoard.shifts) {
             this.nextShiftBoard
-                .getAllShifts()
+                .shifts
                 .sort((a, b) => (a.avgScore < b.avgScore ? 1 : -1));
         }
     }
-    getShiftPref(user, shift) {
-        var _a;
-        const points_allocated = (_a = this.prefs.find((preferance) => preferance.shiftId == shift.shiftId && preferance.user == user)) === null || _a === void 0 ? void 0 : _a.points;
-        return points_allocated ? points_allocated : 0;
-    }
     calculateNextJustice(user, shift) {
-        return user.justicePoints + this.getShiftPref(user, shift);
+        return user.justicePoints + shift.userPreferences.get(user.id);
     }
     initialiseUsers(startDate, endDate) {
         return __awaiter(this, void 0, void 0, function* () {
             var users = yield (0, readerFunctions_1.getAllUsers)();
+            this.usersToShift = [];
             if (Array.isArray(users)) {
                 for (var raw_user of users) {
                     this.usersToShift.push(new user_1.user(raw_user));
@@ -92,10 +75,14 @@ class shiftMaster {
         });
     }
     initialiseShifts(startDate, endDate) {
-        //get constraints
-        var constraints = () => __awaiter(this, void 0, void 0, function* () { return yield (0, readerFunctions_1.getAllConfirmedConstraints)(startDate, endDate); });
-        var ReacuringShi = () => __awaiter(this, void 0, void 0, function* () { return yield (0, readerFunctions_1.getAllRecurringShifts)(); });
-        var prefs = () => __awaiter(this, void 0, void 0, function* () { return yield (0, readerFunctions_1.getAllPreferences)(); });
-        this.nextShiftBoard = new shiftBoard_1.shiftBoard(ReacuringShi(), this.usersToShift, constraints(), prefs());
+        return __awaiter(this, void 0, void 0, function* () {
+            //get constraints
+            var constraints = yield (0, readerFunctions_1.getAllConfirmedConstraints)(startDate, endDate);
+            var ReacuringShifts = yield (0, readerFunctions_1.getAllRecurringShifts)();
+            var prefs = yield (0, readerFunctions_1.getAllPreferences)();
+            this.nextShiftBoard = new shiftBoard_1.shiftBoard(ReacuringShifts, this.usersToShift, constraints, prefs, startDate, endDate);
+        });
     }
 }
+exports.shiftMaster = shiftMaster;
+//# sourceMappingURL=shiftMaster.js.map
