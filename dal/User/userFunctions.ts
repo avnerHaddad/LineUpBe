@@ -4,7 +4,7 @@ const pool = require('../db');
 import {
     getAllUsersQuery,
     getUserInfo,
-    getUserJobsQuery,
+    getUserJobsQuery, getUsersByJobQuery,
     getUserShiftCountQuery,
     getUserUsedPointsQuery
 } from "./UserQueries";
@@ -35,6 +35,11 @@ export async function getUserUsedPoints(username: string): Promise<number> {
 export async function getAllUsers(): Promise<User[]> {
         const { rows }: QueryResult<User> = await pool.query(getAllUsersQuery);
         return rows;
+}
+
+export async function getUsersWithJob(jobId: number): Promise<User[]> {
+    const {rows}: QueryResult<User> = await pool.query(getUsersByJobQuery)
+    return rows;
 }
 
 

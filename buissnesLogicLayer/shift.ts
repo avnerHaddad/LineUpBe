@@ -1,16 +1,18 @@
 import { jobEnum } from "./job";
 import { user } from "./user";
 import { shiftBoard } from "./shiftBoard";
-import { ReacuringShift } from '../dal/models';
+import {ReacuringShift, User} from '../dal/models';
 import { Preferance } from "./Preference";
 import {TIme} from "./Time";
 import {daysOfWeek} from "../config/config";
+import {getUsersByJobQuery} from "../dal/User/UserQueries";
+import {getUsersWithJob} from "../dal/User/userFunctions";
 
 export class shift {
   is_filled!: boolean;
   user_taken!: user | null;
   //a way to connect it with the user score he gave it
-  job!: string; // make enum later
+  jobId!: number; // make enum later
   shiftId!: number;
   avgScore!: number;
   availableUsers!: user[];
@@ -27,7 +29,7 @@ export class shift {
     users: user[],
   ) {
       this.is_filled = false;
-      this.job = ReacuringShift.shiftJobType;
+      this.jobId = Number(ReacuringShift.shiftJobType);
       this.shiftId = ReacuringShift.id;
       this.avgScore = 0;
       this.startHour = new TIme(ReacuringShift.shiftstarthour);
@@ -41,7 +43,7 @@ export class shift {
 
 
       this.userPreferences = new Map<number, number>(); // Initialize the map
-      this.availableUsers = users;
+      this.availableUsers = users
       this.type = this.getShiftType();
         this.initializePreferences();
   }
@@ -50,6 +52,9 @@ export class shift {
   const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   return weekdays.indexOf(weekday);
   }
+
+
+
 
   getShiftType(): string{
     //get type by start hour

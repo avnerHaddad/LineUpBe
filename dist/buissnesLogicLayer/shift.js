@@ -6,7 +6,7 @@ const config_1 = require("../config/config");
 class shift {
     constructor(ReacuringShift, users) {
         this.is_filled = false;
-        this.job = ReacuringShift.shiftJobType;
+        this.jobId = Number(ReacuringShift.shiftJobType);
         this.shiftId = ReacuringShift.id;
         this.avgScore = 0;
         this.startHour = new Time_1.TIme(ReacuringShift.shiftstarthour);

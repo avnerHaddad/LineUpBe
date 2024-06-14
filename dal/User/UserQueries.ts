@@ -25,3 +25,5 @@ export const getUserJobsQuery = `
       INNER JOIN users ON jobs_to_users.user_id = users.id
       WHERE users.username = $1;
     `;
+
+export const getUsersByJobQuery = 'SELECT * FROM Users join jobs_to_users on Users.id = jobs_to_users.user_id join jobs on jobs_to_users.job_id where job_id = $1';
