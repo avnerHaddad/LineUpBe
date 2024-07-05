@@ -1,8 +1,9 @@
 import {Shift} from "../models";
 import {QueryResult} from "pg";
-const pool = require('../db');
 import {GetShiftsByDateAndJob, getShiftsByDates, writeShiftsQuery} from "./ShiftsQueries";
 import {shift} from "../../buissnesLogicLayer/shift";
+
+const pool = require('../db');
 
 export async function FetchShiftsByDate(StartDate: Date, EndDate: Date, jobType: string): Promise<Shift[]> {
         const { rows }: QueryResult<Shift> = await pool.query(GetShiftsByDateAndJob, [StartDate, EndDate, jobType]);
@@ -19,7 +20,7 @@ export async function writeShifts(startDate: Date, endDate: Date, shifts: shift[
         for (const shift of shifts) {
             await pool.query(
                 writeShiftsQuery,
-                [shift.user_taken?.id, shift.date, shift.endDate],
+                [shift.user_taken?.id, shift.date, shift.endDate, shift.jobId, shift.preference],
             );
         }
         await pool.query('COMMIT');

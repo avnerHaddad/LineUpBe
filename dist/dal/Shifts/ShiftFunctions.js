@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.writeShifts = exports.fetchShiftsByDateOnly = exports.FetchShiftsByDate = void 0;
-const pool = require('../db');
 const ShiftsQueries_1 = require("./ShiftsQueries");
+const pool = require('../db');
 function FetchShiftsByDate(StartDate, EndDate, jobType) {
     return __awaiter(this, void 0, void 0, function* () {
         const { rows } = yield pool.query(ShiftsQueries_1.GetShiftsByDateAndJob, [StartDate, EndDate, jobType]);
@@ -31,7 +31,7 @@ function writeShifts(startDate, endDate, shifts) {
         var _a;
         yield pool.query('BEGIN');
         for (const shift of shifts) {
-            yield pool.query(ShiftsQueries_1.writeShiftsQuery, [(_a = shift.user_taken) === null || _a === void 0 ? void 0 : _a.id, shift.date, shift.endDate]);
+            yield pool.query(ShiftsQueries_1.writeShiftsQuery, [(_a = shift.user_taken) === null || _a === void 0 ? void 0 : _a.id, shift.date, shift.endDate, shift.jobId, shift.preference]);
         }
         yield pool.query('COMMIT');
     });

@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.shiftFactory = void 0;
+exports.userFactory = exports.shiftFactory = void 0;
+const user_1 = require("./user");
 const shift_1 = require("./shift");
 const userFunctions_1 = require("../dal/User/userFunctions");
-function shiftFactory(shifts, users) {
+function shiftFactory(shifts, users, constraints, Preferences) {
     return __awaiter(this, void 0, void 0, function* () {
         //create a map between shiftJobTypes and UserswithThatJob
         const shiftsToJobs = new Map();
@@ -36,7 +37,33 @@ function shiftFactory(shifts, users) {
             }
             Newshifts.push(nextShift);
         }
+        //go over all shifts, if a shifts date is in the range of the constraint start and end time remove the user assigned to the constraint from the shift possible users list
+        for (let shift of Newshifts) {
+            for (let constraint of constraints) {
+                if (isDateInRange(shift.date, constraint.startat, constraint.endat)) {
+                    shift.removeUserById(constraint.userid);
+                }
+            }
+        }
+        for (let preference of Preferences) {
+            for (let shift of Newshifts) {
+                if (preference.shift_id === shift.shiftId) {
+                    shift.addPreference(preference.user_id, preference.preference);
+                }
+            }
+        }
         return Newshifts;
     });
 }
 exports.shiftFactory = shiftFactory;
+function isDateInRange(date, startDate, endDate) {
+    return date >= startDate && date <= endDate;
+}
+function userFactory() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const users = yield (0, userFunctions_1.getAllUsers)();
+        //return a list of new user(User)
+        return users.map(dbUser => new user_1.user(dbUser));
+    });
+}
+exports.userFactory = userFactory;

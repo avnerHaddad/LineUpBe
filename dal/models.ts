@@ -1,7 +1,7 @@
 export interface ReacuringShift {
   id: number;
-  shiftday: string;
-  shiftJobType: string;
+  shiftday: number;
+  shiftjobid: string;
   shiftstarthour: string;
   shiftendhour: string;
 }
@@ -32,6 +32,7 @@ export interface Job {
 export interface User {
   id: number;
   username: string;
+  injustice: number;
   //maybe shifts that user takes/took
   //maybe all of his preferences
   //link to his picture

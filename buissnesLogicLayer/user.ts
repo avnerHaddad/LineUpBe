@@ -12,7 +12,7 @@ export class user {
   constructor(user:User) {
     this.id = user.id;
     this.username = user.username;
-    this.justicePoints = 0;
+    this.justicePoints = user.injustice;
     this.jobs = jobEnum.Tech;
     this.maxShiftsPerWeek = 3; // Default value for max shifts per week - make cocnfigurable in the future
 

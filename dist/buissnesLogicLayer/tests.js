@@ -16,7 +16,7 @@ const ShiftFunctions_1 = require("../dal/Shifts/ShiftFunctions");
 function CreateNextWeekShifts(startDate, endDate) {
     return __awaiter(this, void 0, void 0, function* () {
         const shiftMasterInstance = new shiftMaster_1.shiftMaster();
-        yield shiftMasterInstance.initialiseUsers(startDate, endDate);
+        yield shiftMasterInstance.initialiseUsers();
         yield shiftMasterInstance.initialiseShifts(startDate, endDate);
         let shifts = yield shiftMasterInstance.solve();
         // @ts-ignore

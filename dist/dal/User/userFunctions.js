@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUsersWithJob = exports.getAllUsers = exports.getUserUsedPoints = exports.getUserShiftCount = exports.FetchUser = void 0;
-const pool = require('../db');
 const UserQueries_1 = require("./UserQueries");
+const pool = require('../db');
 function FetchUser(username) {
     return __awaiter(this, void 0, void 0, function* () {
         const { rows } = yield pool.query(UserQueries_1.getUserInfo, [username]);
@@ -48,7 +48,7 @@ function getAllUsers() {
 exports.getAllUsers = getAllUsers;
 function getUsersWithJob(jobId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { rows } = yield pool.query(UserQueries_1.getUsersByJobQuery);
+        const { rows } = yield pool.query(UserQueries_1.getUsersByJobQuery, [jobId]);
         return rows;
     });
 }

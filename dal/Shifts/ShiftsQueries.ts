@@ -39,5 +39,5 @@ export const getShiftsByDates = `
         `;
 
 
-export const writeShiftsQuery = 'INSERT INTO shifts (user_id, shiftstarttime, shiftendtime) VALUES ($1, $2, $3)'
+export const writeShiftsQuery = 'INSERT INTO shifts (user_id, shiftstarttime, shiftendtime, job_id, preference) VALUES ($1, $2, $3, $4, $5)'
 

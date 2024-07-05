@@ -37,4 +37,4 @@ exports.getShiftsByDates = `
         WHERE
           Shifts.shiftStartTime >= $1 AND Shifts.shiftEndTime <= $2
         `;
-exports.writeShiftsQuery = 'INSERT INTO shifts (user_id, shiftstarttime, shiftendtime) VALUES ($1, $2, $3)';
+exports.writeShiftsQuery = 'INSERT INTO shifts (user_id, shiftstarttime, shiftendtime, job_id, preference) VALUES ($1, $2, $3, $4, $5)';

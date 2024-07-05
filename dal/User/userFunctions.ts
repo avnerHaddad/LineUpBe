@@ -1,13 +1,15 @@
 import {QueryResult} from "pg";
 import {User} from "../models";
-const pool = require('../db');
 import {
     getAllUsersQuery,
     getUserInfo,
-    getUserJobsQuery, getUsersByJobQuery,
+    getUserJobsQuery,
+    getUsersByJobQuery,
     getUserShiftCountQuery,
     getUserUsedPointsQuery
 } from "./UserQueries";
+
+const pool = require('../db');
 
 
 export async function FetchUser(username: string): Promise<User[]> {
@@ -38,7 +40,7 @@ export async function getAllUsers(): Promise<User[]> {
 }
 
 export async function getUsersWithJob(jobId: number): Promise<User[]> {
-    const {rows}: QueryResult<User> = await pool.query(getUsersByJobQuery)
+    const {rows}: QueryResult<User> = await pool.query(getUsersByJobQuery, [jobId])
     return rows;
 }
 
